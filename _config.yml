@@ -31,7 +31,7 @@ twitter_username: priyam8parashar
 github_username:  zephirefaith
 
 # Build settings
-theme: minimal
+theme: minima
 plugins:
   - jekyll-feed
 
