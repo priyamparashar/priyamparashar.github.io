@@ -1,0 +1,197 @@
+{
+  "main": {
+    "id": "f9c68b6ae9322d36",
+    "type": "split",
+    "children": [
+      {
+        "id": "3c28fa7b7064b86a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "57e40b7e3912540b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "content/index.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "d00e085617ea23fa",
+    "type": "split",
+    "children": [
+      {
+        "id": "08c66e6a21e92ea8",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7896e73dc3db57fe",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "a483268011fae490",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "0775f7bca489bac4",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "a643e238b7c51e9f",
+    "type": "split",
+    "children": [
+      {
+        "id": "85b3418cd2769d85",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b07292ce4334da9c",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "content/index.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "64fe12324799fbb0",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "content/index.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "f1a6c4fdcb8d24ef",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "a3042bac70a660a2",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "content/index.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "57e40b7e3912540b",
+  "lastOpenFiles": [
+    "content/index.md",
+    "content",
+    "node_modules/katex/src/functions.js",
+    "node_modules/mathjax-full/README.md",
+    "node_modules/mathjax-full/CONTRIBUTING.md",
+    "node_modules/mathjax-full/tslint.json",
+    "node_modules/mathjax-full/tsconfig.json",
+    "node_modules/mathjax-full/package.json",
+    "node_modules/mathjax-full/components/webpack.common.js",
+    "node_modules/typescript/ThirdPartyNoticeText.txt",
+    "node_modules/typescript/LICENSE.txt",
+    "node_modules/typescript/lib/typescript.d.ts",
+    "node_modules/typescript/lib/tsserverlibrary.d.ts",
+    "node_modules/typescript/SECURITY.md",
+    "node_modules/typescript/README.md",
+    "node_modules/jsdom/README.md",
+    "node_modules/@esbuild/darwin-arm64/README.md",
+    "node_modules/rehype-citation/README.md",
+    "node_modules/speech-rule-engine/README.md",
+    "node_modules/speech-rule-engine/bin/README.md",
+    "node_modules/css-tree/README.md",
+    "node_modules/flexsearch/README.md",
+    "node_modules/flexsearch/CHANGELOG.md",
+    "node_modules/katex/README.md",
+    "node_modules/katex/src/metrics/README.md",
+    "node_modules/sass/README.md",
+    "node_modules/prettier/README.md",
+    "node_modules/preact/README.md",
+    "node_modules/speech-rule-engine/lib/README.md",
+    "node_modules/resolve/SECURITY.md",
+    "node_modules/@citation-js/core/README.md",
+    "node_modules/@citation-js/core/LICENSE.md",
+    "node_modules/rimraf/README.md",
+    "node_modules/parse5/README.md",
+    "node_modules/cssstyle/README.md",
+    "node_modules/psl/browserstack-logo.svg",
+    "node_modules/cli-spinner/img/spinner.gif",
+    "assets/imgs/typora.png",
+    "assets/imgs/screenshot.png",
+    "assets/imgs/gh-pages.png",
+    "assets/imgs/files.png",
+    "assets/imgs/environments.png",
+    "assets/imgs/environment.gif",
+    "assets/imgs/editing.gif",
+    "quartz/static/og-image.png"
+  ]
+}
