@@ -4,10 +4,10 @@ tags:
   - book-review
   - horror
 ---
+<img src="../assets/the_reformatory.jpg" alt="The Reformatory book cover" style="float: left; margin: 0 20px 20px 0; width: 200px; height: auto;">
+
 > [!info] Summary
-> Robbie and Gloria are born and brought up in Gracetown, Florida. Gracetown is a place of horrors and Robbie and Gloria both are touched by it and have ability to see ghosts and intuit futures. Robbie gets sent to *the Reformatory* when he kicks the knee of an affluent white boy, who also happens to be his neighbor making advances on his sister, and is clearly in need of "fixing". Gloria, his sister, is on the outside seeing the injustice of what is happening and trying her best to save her brother. Save from what? *The Reformatory* bills itself and acts like a high school but is actually a place of torture and heinous crimes against young boys, specially if you were black. They are fathered by Robert Stephens, a known black local leader, which further complicates their position inside and outside. Then there are the haints of Reformatory to contend with. An emotional, horror-fantasy novel awaits. 
-> 
-> ![[the_reformatory.jpg | 200]]
+> Robbie and Gloria are born and brought up in Gracetown, Florida. Gracetown is a place of horrors and Robbie and Gloria both are touched by it and have ability to see ghosts and intuit futures. Robbie gets sent to *the Reformatory* when he kicks the knee of an affluent white boy, who also happens to be his neighbor making advances on his sister, and is clearly in need of "fixing". Gloria, his sister, is on the outside seeing the injustice of what is happening and trying her best to save her brother. Save from what? *The Reformatory* bills itself and acts like a high school but is actually a place of torture and heinous crimes against young boys, specially if you were black. They are fathered by Robert Stephens, a known black local leader, which further complicates their position inside and outside. Then there are the haints of Reformatory to contend with. An emotional, horror-fantasy novel awaits.
 
 *Rating*: ⭐️⭐️⭐️⭐️⭐️
 
