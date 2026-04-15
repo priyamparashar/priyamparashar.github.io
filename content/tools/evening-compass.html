@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Evening Compass">
+<title>Evening Compass</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf4ed;
+    --bg-warm: #fffaf3;
+    --bg-mid: #f2e9e1;
+    --text: #575279;
+    --text-muted: #797593;
+    --text-subtle: #9893a5;
+    --border: #dfdad9;
+    --rose: #d7827e;
+    --iris: #907aa9;
+    --foam: #56949f;
+    --gold: #ea9d34;
+    --pine: #286983;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Newsreader', Georgia, serif;
+    padding: 2rem 1.25rem;
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .sans { font-family: 'DM Sans', sans-serif; }
+  .uppercase { text-transform: uppercase; letter-spacing: 0.12em; }
+
+  button {
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-warm);
+    color: var(--text);
+    transition: all 0.15s ease;
+    -webkit-appearance: none;
+  }
+
+  button:active { transform: scale(0.98); }
+
+  .header { text-align: center; margin-bottom: 1.5rem; }
+  .header .label { font-size: 0.7rem; color: var(--text-subtle); margin-bottom: 0.5rem; }
+  .header h1 { font-size: 1.75rem; font-weight: 300; font-style: italic; line-height: 1.2; }
+
+  .tracker-toggle {
+    width: 100%; padding: 0.65rem 1rem; margin-bottom: 1.75rem;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.8rem; background: transparent;
+  }
+  .tracker-toggle.open { background: var(--bg-warm); }
+  .tracker-toggle .arrow { font-size: 0.75rem; color: var(--text-subtle); }
+
+  .tracker { margin-bottom: 2rem; animation: fadeIn 0.3s ease; }
+
+  .day-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 0.35rem; margin-bottom: 1.25rem;
+  }
+  .day-col { text-align: center; }
+  .day-col.future { opacity: 0.35; }
+  .day-label {
+    font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-subtle); margin-bottom: 0.4rem;
+  }
+  .day-label.today { color: var(--rose); font-weight: 600; }
+  .day-dots {
+    min-height: 2.5rem; display: flex; flex-direction: column;
+    align-items: center; gap: 0.2rem; justify-content: center;
+  }
+  .empty-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--border);
+  }
+  .empty-dot.today { background: rgba(215,130,126,0.2); border: 1px solid rgba(215,130,126,0.33); }
+  .dot { border-radius: 50%; }
+
+  .legend {
+    display: flex; gap: 0.75rem; justify-content: center;
+    flex-wrap: wrap; margin-bottom: 0.75rem;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 0.3rem;
+    font-size: 0.7rem; color: var(--text-subtle);
+  }
+  .legend-item.active { color: var(--text); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .size-legend {
+    display: flex; gap: 0.75rem; justify-content: center;
+    align-items: center; margin-bottom: 1rem;
+  }
+  .size-legend-item {
+    display: flex; align-items: center; gap: 0.25rem;
+    font-size: 0.6rem; color: var(--text-subtle);
+  }
+
+  .section { margin-bottom: 1.75rem; animation: fadeIn 0.3s ease; }
+  .section-header {
+    display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;
+  }
+  .section-num { font-size: 0.65rem; letter-spacing: 0.1em; color: var(--text-subtle); }
+  .section-num.done { color: var(--rose); }
+  .section-title { font-size: 1.05rem; font-weight: 400; }
+  .section-check { font-size: 0.75rem; color: var(--rose); }
+
+  .mood-btn {
+    width: 100%; padding: 0.75rem 1rem; margin-bottom: 0.5rem;
+    text-align: left; font-size: 0.85rem;
+  }
+  .mood-btn.selected {
+    border: 1.5px solid var(--rose); color: var(--rose);
+    background: var(--bg); box-shadow: 0 0 0 1px rgba(215,130,126,0.13);
+  }
+  .mood-desc { color: var(--text-subtle); margin-left: 0.5rem; font-size: 0.8rem; }
+
+  .energy-grid { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .energy-btn { flex: 1 1 45%; padding: 0.75rem; text-align: center; font-size: 0.85rem; }
+  .energy-btn.selected { border: 1.5px solid var(--rose); color: var(--rose); background: var(--bg); }
+  .energy-emoji { font-size: 1.2rem; margin-bottom: 0.25rem; }
+
+  .time-grid { display: flex; gap: 0.5rem; }
+  .time-btn { flex: 1; padding: 0.75rem 0.5rem; text-align: center; font-size: 0.8rem; }
+  .time-btn.selected { border: 1.5px solid var(--rose); color: var(--rose); background: var(--bg); }
+  .time-label { font-weight: 600; }
+  .time-desc { font-size: 0.7rem; color: var(--text-subtle); margin-top: 0.15rem; }
+
+  .results { margin-top: 0.5rem; animation: fadeIn 0.4s ease; }
+  .results-label { font-size: 0.7rem; color: var(--text-subtle); margin-bottom: 1rem; }
+
+  .hobby-card {
+    margin-bottom: 1rem; padding: 1rem;
+    border: 1px solid var(--border); border-radius: 10px; background: var(--bg);
+  }
+  .hobby-card.top { padding: 1.25rem; background: var(--bg-warm); }
+  .hobby-card.faded { opacity: 0.55; }
+
+  .hobby-header { display: flex; align-items: center; justify-content: space-between; }
+  .hobby-name-area { display: flex; align-items: center; gap: 0.5rem; }
+  .hobby-emoji { font-size: 1.3rem; }
+  .hobby-name { font-size: 1rem; font-weight: 400; }
+  .hobby-card.top .hobby-name { font-size: 1.15rem; font-weight: 500; }
+
+  .hobby-actions { display: flex; align-items: center; gap: 0.5rem; }
+  .best-fit {
+    font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;
+    padding: 0.2rem 0.6rem; border-radius: 100px;
+  }
+  .log-btn {
+    padding: 0.2rem 0.5rem; font-size: 0.65rem; color: var(--text-subtle); background: transparent;
+  }
+
+  .onramp-box {
+    margin-top: 0.75rem; padding: 0.6rem 0.75rem;
+    border-radius: 6px; font-size: 0.8rem; color: var(--text-muted);
+  }
+  .hobby-card.top .onramp-box { background: var(--bg); }
+  .onramp-box { background: var(--bg-mid); }
+  .sub-label {
+    font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-subtle); display: block; margin-bottom: 0.25rem;
+  }
+
+  .activity-box { margin-top: 0.5rem; font-size: 0.85rem; color: var(--text); line-height: 1.5; }
+
+  .logging-panel {
+    margin-top: 0.75rem; padding: 0.75rem;
+    background: var(--bg-mid); border-radius: 8px; animation: fadeIn 0.2s ease;
+  }
+  .depth-grid { display: flex; gap: 0.35rem; }
+  .depth-btn {
+    flex: 1; padding: 0.5rem 0.25rem; border-radius: 6px;
+    background: var(--bg-warm); font-size: 0.7rem; text-align: center; line-height: 1.3;
+  }
+  .depth-label { font-weight: 500; }
+  .depth-desc { font-size: 0.6rem; color: var(--text-subtle); margin-top: 0.15rem; }
+
+  .cancel-btn {
+    margin-top: 0.4rem; padding: 0.25rem; border: none;
+    background: transparent; color: var(--text-subtle);
+    font-size: 0.65rem; width: 100%;
+  }
+
+  .reset-btn {
+    width: 100%; padding: 0.75rem; margin-top: 0.5rem;
+    background: transparent; color: var(--text-subtle); font-size: 0.8rem;
+  }
+
+  .reminder {
+    margin-top: 1.5rem; padding: 1rem;
+    border-left: 2px solid rgba(215,130,126,0.27);
+    font-size: 0.8rem; font-style: italic; color: var(--text-muted); line-height: 1.6;
+  }
+
+  .undo-btn {
+    display: block; margin: 0 auto; padding: 0.4rem 0.8rem;
+    border-radius: 6px; background: transparent; color: var(--text-subtle); font-size: 0.7rem;
+  }
+
+  .empty-week {
+    margin-top: 0.75rem; text-align: center; font-size: 0.75rem;
+    font-style: italic; color: var(--text-subtle);
+  }
+
+  .data-section {
+    margin-top: 1rem; padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+  .data-btns { display: flex; gap: 0.5rem; }
+  .data-btn {
+    flex: 1; padding: 0.5rem; font-size: 0.7rem;
+    color: var(--text-subtle); background: transparent;
+  }
+  .import-area {
+    margin-top: 0.5rem;
+  }
+  .import-textarea {
+    width: 100%; height: 80px; padding: 0.5rem;
+    border: 1px solid var(--border); border-radius: 6px;
+    background: var(--bg-warm); color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 0.75rem;
+    resize: none;
+  }
+  .import-confirm {
+    margin-top: 0.35rem; padding: 0.4rem 0.8rem;
+    font-size: 0.7rem; color: var(--rose); border-color: var(--rose);
+    background: transparent;
+  }
+  .toast {
+    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    padding: 0.6rem 1.25rem; background: var(--text);
+    color: var(--bg); font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; border-radius: 100px;
+    animation: toastIn 0.3s ease, toastOut 0.3s ease 1.7s forwards;
+    z-index: 100;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+  @keyframes toastOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+const HOBBIES = [
+  {
+    id: "art", name: "Art", emoji: "✏️", color: "#d7827e",
+    onRamps: [
+      "5 min Pinterest — save one reference to your 'to draw' board",
+      "Scroll r/SketchDaily or @sketch_dailies for a prompt",
+      "Flip through an art book or your own past sketches"
+    ],
+    activities: {
+      short: "One Loomis head or a 15-min gesture sketch from reference",
+      medium: "Work on a study — ink, pencil, or gouache from a saved reference",
+      long: "Full study session: warm-up sketches → focused piece → review"
+    },
+    energyCost: 3,
+    moodFit: ["restless", "creative", "neutral"],
+    moodAvoid: ["drained"]
+  },
+  {
+    id: "reading", name: "Reading", emoji: "📖", color: "#907aa9",
+    onRamps: [
+      "Listen to 5 min of a podcast discussing your current book",
+      "Reread the last page you stopped on — just reenter the world",
+      "Browse r/literature for discussion on what you're reading"
+    ],
+    activities: {
+      short: "Read 10-15 pages, no pressure to finish a chapter",
+      medium: "Read 30+ pages or finish a chapter, jot a thought in Obsidian",
+      long: "Deep reading session — a full section, then write a reflection"
+    },
+    energyCost: 2,
+    moodFit: ["calm", "melancholy", "cozy", "neutral"],
+    moodAvoid: ["restless"]
+  },
+  {
+    id: "gaming", name: "Gaming", emoji: "🎮", color: "#56949f",
+    onRamps: [
+      "Browse r/patientgamers for a thread on a game you own",
+      "Watch a 5-min video essay intro on a game in your backlog",
+      "Just boot it up — load your save and see where you are"
+    ],
+    activities: {
+      short: "One quest, one level, one run — a contained session",
+      medium: "A solid play session — progress a storyline or explore",
+      long: "Extended session — get lost in it, no guilt"
+    },
+    energyCost: 1,
+    moodFit: ["drained", "restless", "cozy", "neutral", "creative"],
+    moodAvoid: []
+  },
+  {
+    id: "movie", name: "Movie / Show", emoji: "🎬", color: "#ea9d34",
+    onRamps: [
+      "Read a single review or Letterboxd entry to pick something",
+      "Ask a friend what they watched recently",
+      "Browse a curated list (Sight & Sound, Criterion Channel)"
+    ],
+    activities: {
+      short: "Watch one episode of something (~25-40 min)",
+      medium: "Watch a film or 2 episodes",
+      long: "Double feature or a film + write your Letterboxd review"
+    },
+    energyCost: 1,
+    moodFit: ["drained", "calm", "melancholy", "cozy", "neutral"],
+    moodAvoid: []
+  }
+];
+
+const MOODS = [
+  { id: "drained", label: "Drained", desc: "brain is empty, no decisions please" },
+  { id: "restless", label: "Restless", desc: "buzzy energy, need to do something with my hands" },
+  { id: "calm", label: "Calm", desc: "settled, could go deep on something quiet" },
+  { id: "melancholy", label: "Melancholy", desc: "soft, reflective, want comfort" },
+  { id: "cozy", label: "Cozy", desc: "warm and nestled, want something gentle" },
+  { id: "creative", label: "Creative", desc: "I feel a spark, let me make something" },
+  { id: "neutral", label: "Neutral", desc: "no strong pull either way" }
+];
+
+const ENERGY_LEVELS = [
+  { id: 1, label: "Running on fumes", emoji: "🪫" },
+  { id: 2, label: "Low but functional", emoji: "🔋" },
+  { id: 3, label: "Decent", emoji: "⚡" },
+  { id: 4, label: "Surprisingly good", emoji: "✨" }
+];
+
+const TIME_SLOTS = [
+  { id: "short", label: "~20 min", desc: "just a taste" },
+  { id: "medium", label: "30-45 min", desc: "a real session" },
+  { id: "long", label: "1-2 hours", desc: "weekend mode" }
+];
+
+const DEPTH_OPTIONS = [
+  { id: "onramp", label: "On-ramp only", desc: "browsed, saved refs, vibed" },
+  { id: "short", label: "Quick session", desc: "~20 min of actual doing" },
+  { id: "full", label: "Full session", desc: "30+ min, got into it" }
+];
+
+const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+// State
+let state = {
+  mood: null, energy: null, time: null,
+  results: null, step: 0,
+  showTracker: false, logging: null,
+  showImport: false, toast: null
+};
+
+// Storage
+function getWeekKey() {
+  const now = new Date();
+  const day = now.getDay();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((day + 6) % 7));
+  return `compass:${monday.getFullYear()}-${String(monday.getMonth()+1).padStart(2,"0")}-${String(monday.getDate()).padStart(2,"0")}`;
+}
+
+function getTodayIndex() { return (new Date().getDay() + 6) % 7; }
+
+function getWeekLog() {
+  try {
+    const raw = localStorage.getItem(getWeekKey());
+    return raw ? JSON.parse(raw) : [];
+  } catch(e) { return []; }
+}
+
+function saveWeekLog(log) {
+  try { localStorage.setItem(getWeekKey(), JSON.stringify(log)); } catch(e) {}
+}
+
+function getAllData() {
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.startsWith("compass:")) {
+      data[key] = JSON.parse(localStorage.getItem(key));
+    }
+  }
+  return data;
+}
+
+function importAllData(data) {
+  Object.entries(data).forEach(([key, val]) => {
+    if (key.startsWith("compass:")) {
+      localStorage.setItem(key, JSON.stringify(val));
+    }
+  });
+}
+
+// Scoring
+function scoreHobby(hobby, mood, energy) {
+  let score = 0;
+  if (hobby.moodFit.includes(mood)) score += 3;
+  if (hobby.moodAvoid.includes(mood)) score -= 5;
+  const gap = energy - hobby.energyCost;
+  if (gap >= 0) score += 2;
+  if (gap < -1) score -= 3;
+  if (gap < 0) score -= 1;
+  if (energy >= 3 && hobby.energyCost >= 3) score += 1;
+  return score;
+}
+
+function rankHobbies(mood, energy, time) {
+  return HOBBIES.map(h => ({
+    ...h,
+    score: scoreHobby(h, mood, energy),
+    activity: h.activities[time],
+    onRamp: h.onRamps[Math.floor(Math.random() * h.onRamps.length)]
+  })).sort((a,b) => b.score - a.score);
+}
+
+// Render
+function showToast(msg) {
+  state.toast = msg;
+  render();
+  setTimeout(() => { state.toast = null; render(); }, 2000);
+}
+
+function render() {
+  const weekLog = getWeekLog();
+  const todayIdx = getTodayIndex();
+  const totalSessions = weekLog.length;
+
+  const dayGrid = DAY_LABELS.map((label, i) => ({
+    label, dayIdx: i,
+    entries: weekLog.filter(e => e.day === i)
+  }));
+
+  const weekSummary = HOBBIES.map(h => ({
+    ...h, count: weekLog.filter(e => e.hobbyId === h.id).length
+  }));
+
+  let html = '';
+
+  // Header
+  html += `
+    <div class="header">
+      <div class="label sans uppercase">evening compass</div>
+      <h1>What should I do tonight?</h1>
+    </div>
+  `;
+
+  // Tracker toggle
+  html += `
+    <button class="tracker-toggle sans ${state.showTracker ? 'open' : ''}" onclick="toggleTracker()">
+      <span>This week ${totalSessions > 0 ? `— ${totalSessions} session${totalSessions !== 1 ? 's' : ''}` : ''}</span>
+      <span class="arrow">${state.showTracker ? '▲' : '▼'}</span>
+    </button>
+  `;
+
+  // Tracker
+  if (state.showTracker) {
+    html += '<div class="tracker">';
+
+    // Day grid
+    html += '<div class="day-grid">';
+    dayGrid.forEach(day => {
+      const isToday = day.dayIdx === todayIdx;
+      const isFuture = day.dayIdx > todayIdx;
+      html += `<div class="day-col ${isFuture ? 'future' : ''}">`;
+      html += `<div class="day-label sans ${isToday ? 'today' : ''}">${day.label}</div>`;
+      html += '<div class="day-dots">';
+      if (day.entries.length === 0) {
+        html += `<div class="empty-dot ${isToday && !isFuture ? 'today' : ''}"></div>`;
+      } else {
+        day.entries.forEach(entry => {
+          const hobby = HOBBIES.find(h => h.id === entry.hobbyId);
+          const size = entry.depth === 'onramp' ? 7 : entry.depth === 'short' ? 9 : 11;
+          const opacity = entry.depth === 'onramp' ? 0.55 : entry.depth === 'short' ? 0.75 : 1;
+          html += `<div class="dot" title="${hobby?.name} (${entry.depth})" style="width:${size}px;height:${size}px;background:${hobby?.color};opacity:${opacity}"></div>`;
+        });
+      }
+      html += '</div></div>';
+    });
+    html += '</div>';
+
+    // Hobby legend
+    html += '<div class="legend sans">';
+    weekSummary.forEach(h => {
+      html += `<div class="legend-item ${h.count > 0 ? 'active' : ''}">
+        <div class="legend-dot" style="background:${h.color};opacity:${h.count > 0 ? 1 : 0.35}"></div>
+        ${h.name} ${h.count > 0 ? '×'+h.count : ''}
+      </div>`;
+    });
+    html += '</div>';
+
+    // Size legend
+    html += '<div class="size-legend sans">';
+    [{s:7,l:'on-ramp',o:0.55},{s:9,l:'quick',o:0.75},{s:11,l:'full',o:1}].forEach(d => {
+      html += `<div class="size-legend-item">
+        <div class="dot" style="width:${d.s}px;height:${d.s}px;background:var(--text-subtle);opacity:${d.o}"></div>
+        ${d.l}
+      </div>`;
+    });
+    html += '</div>';
+
+    if (weekLog.length > 0) {
+      html += '<button class="undo-btn sans" onclick="undoLast()">Undo last entry</button>';
+    }
+
+    if (totalSessions === 0 && todayIdx >= 3) {
+      html += '<div class="empty-week">Empty weeks happen. This isn\'t a scorecard.</div>';
+    }
+
+    // Export / Import
+    html += '<div class="data-section"><div class="data-btns">';
+    html += '<button class="data-btn sans" onclick="exportData()">Export all data</button>';
+    html += `<button class="data-btn sans" onclick="toggleImport()">${state.showImport ? 'Cancel' : 'Import data'}</button>`;
+    html += '</div>';
+
+    if (state.showImport) {
+      html += `<div class="import-area">
+        <textarea id="importField" class="import-textarea sans" placeholder="Paste exported JSON here..."></textarea>
+        <button class="import-confirm sans" onclick="doImport()">Import</button>
+      </div>`;
+    }
+
+    html += '</div></div>';
+  }
+
+  // Steps
+  if (state.step < 3) {
+    // Mood
+    if (state.step >= 0) {
+      html += sectionStart("How are you feeling?", "01", state.mood !== null);
+      MOODS.forEach(m => {
+        const sel = state.mood === m.id;
+        html += `<button class="mood-btn sans ${sel ? 'selected' : ''}" onclick="selectMood('${m.id}')">
+          <strong>${m.label}</strong><span class="mood-desc">— ${m.desc}</span>
+        </button>`;
+      });
+      html += sectionEnd();
+    }
+
+    // Energy
+    if (state.step >= 1) {
+      html += sectionStart("Energy level?", "02", state.energy !== null);
+      html += '<div class="energy-grid">';
+      ENERGY_LEVELS.forEach(e => {
+        const sel = state.energy === e.id;
+        html += `<button class="energy-btn sans ${sel ? 'selected' : ''}" onclick="selectEnergy(${e.id})">
+          <div class="energy-emoji">${e.emoji}</div>${e.label}
+        </button>`;
+      });
+      html += '</div>';
+      html += sectionEnd();
+    }
+
+    // Time
+    if (state.step >= 2) {
+      html += sectionStart("How much time?", "03", state.time !== null);
+      html += '<div class="time-grid">';
+      TIME_SLOTS.forEach(t => {
+        const sel = state.time === t.id;
+        html += `<button class="time-btn sans ${sel ? 'selected' : ''}" onclick="selectTime('${t.id}')">
+          <div class="time-label">${t.label}</div>
+          <div class="time-desc">${t.desc}</div>
+        </button>`;
+      });
+      html += '</div>';
+      html += sectionEnd();
+    }
+  }
+
+  // Results
+  if (state.results && state.step === 3) {
+    html += '<div class="results">';
+    html += '<div class="results-label sans uppercase">tonight\'s recommendations</div>';
+
+    state.results.forEach((hobby, i) => {
+      const isTop = i === 0;
+      const isFaded = i >= 2;
+      const isLogging = state.logging === hobby.id;
+      const borderStyle = isTop ? `1.5px solid ${hobby.color}` : `1px solid var(--border)`;
+
+      html += `<div class="hobby-card ${isTop ? 'top' : ''} ${isFaded ? 'faded' : ''}" style="border:${borderStyle}">`;
+
+      // Header
+      html += `<div class="hobby-header">
+        <div class="hobby-name-area">
+          <span class="hobby-emoji">${hobby.emoji}</span>
+          <span class="hobby-name" style="color:${isTop ? hobby.color : 'var(--text)'}">${hobby.name}</span>
+        </div>
+        <div class="hobby-actions">
+          ${isTop ? `<span class="best-fit sans" style="color:${hobby.color};background:${hobby.color}15">best fit</span>` : ''}
+          ${!isLogging ? `<button class="log-btn sans" onclick="startLog('${hobby.id}')">Log it</button>` : ''}
+        </div>
+      </div>`;
+
+      if (isLogging) {
+        html += `<div class="logging-panel">
+          <div class="sans" style="font-size:0.7rem;color:var(--text-subtle);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem">How much did you do?</div>
+          <div class="depth-grid">`;
+        DEPTH_OPTIONS.forEach(d => {
+          html += `<button class="depth-btn sans" onclick="logActivity('${hobby.id}','${d.id}')">
+            <div class="depth-label">${d.label}</div>
+            <div class="depth-desc">${d.desc}</div>
+          </button>`;
+        });
+        html += `</div>
+          <button class="cancel-btn sans" onclick="cancelLog()">cancel</button>
+        </div>`;
+      } else {
+        html += `<div class="onramp-box sans">
+          <span class="sub-label sans">on-ramp</span>${hobby.onRamp}
+        </div>
+        <div class="activity-box sans">
+          <span class="sub-label sans">then</span>${hobby.activity}
+        </div>`;
+      }
+
+      html += '</div>';
+    });
+
+    html += '<button class="reset-btn sans" onclick="resetAll()">Start over — mood changed</button>';
+
+    html += `<div class="reminder">
+      The on-ramp counts as a session. If you browse Pinterest for 15 minutes and save three references, that's your art night. You engaged. That's real.
+    </div>`;
+
+    html += '</div>';
+  }
+
+  // Toast
+  if (state.toast) {
+    html += `<div class="toast sans">${state.toast}</div>`;
+  }
+
+  document.getElementById('app').innerHTML = html;
+}
+
+function sectionStart(title, num, done) {
+  return `<div class="section">
+    <div class="section-header">
+      <span class="section-num sans ${done ? 'done' : ''}">${num}</span>
+      <span class="section-title">${title}</span>
+      ${done ? '<span class="section-check">✓</span>' : ''}
+    </div>`;
+}
+function sectionEnd() { return '</div>'; }
+
+// Actions
+function toggleTracker() { state.showTracker = !state.showTracker; render(); }
+
+function selectMood(id) { state.mood = id; if (state.step === 0) state.step = 1; render(); }
+function selectEnergy(id) { state.energy = id; if (state.step === 1) state.step = 2; render(); }
+function selectTime(id) {
+  state.time = id;
+  state.results = rankHobbies(state.mood, state.energy, id);
+  state.step = 3;
+  render();
+}
+
+function resetAll() {
+  state.mood = null; state.energy = null; state.time = null;
+  state.results = null; state.step = 0; state.logging = null;
+  render();
+}
+
+function startLog(hobbyId) { state.logging = hobbyId; render(); }
+function cancelLog() { state.logging = null; render(); }
+
+function logActivity(hobbyId, depth) {
+  const log = getWeekLog();
+  log.push({ hobbyId, depth, day: getTodayIndex(), date: new Date().toISOString() });
+  saveWeekLog(log);
+  state.logging = null;
+  const hobby = HOBBIES.find(h => h.id === hobbyId);
+  showToast(`${hobby.emoji} Logged!`);
+}
+
+function undoLast() {
+  const log = getWeekLog();
+  if (log.length > 0) {
+    log.pop();
+    saveWeekLog(log);
+    render();
+  }
+}
+
+function exportData() {
+  const data = getAllData();
+  const json = JSON.stringify(data, null, 2);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(json).then(() => {
+      showToast("Copied to clipboard");
+    }).catch(() => {
+      // Fallback: show in a prompt
+      prompt("Copy this data:", json);
+    });
+  } else {
+    prompt("Copy this data:", json);
+  }
+}
+
+function toggleImport() { state.showImport = !state.showImport; render(); }
+
+function doImport() {
+  const field = document.getElementById('importField');
+  if (!field) return;
+  try {
+    const data = JSON.parse(field.value);
+    importAllData(data);
+    state.showImport = false;
+    showToast("Data imported!");
+  } catch(e) {
+    showToast("Invalid JSON");
+  }
+}
+
+// Init
+render();
+</script>
+</body>
+</html>
